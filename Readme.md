@@ -1,4 +1,4 @@
-# Личный проект «VuePizza»
+do # Личный проект «VuePizza»
 
 * Студент: [Иван Питенин](https://up.htmlacademy.ru/vue/1/user/246656).
 
