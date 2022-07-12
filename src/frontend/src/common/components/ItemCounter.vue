@@ -3,7 +3,7 @@
     <button
       type="button"
       class="counter__button counter__button--minus"
-      @click="changeValue(-1)"
+      @click="changeValue(-1, ingredient.id)"
       :disabled="isLimitMin"
     >
       <span class="visually-hidden">Меньше</span>
@@ -12,13 +12,14 @@
       type="text"
       name="counter"
       class="counter__input"
-      v-model="counter"
+      :value="ingredient.count"
       @blur="validateValue($event.target.value)"
+      disabled
     />
     <button
       type="button"
       class="counter__button counter__button--plus"
-      @click="changeValue(1)"
+      @click="changeValue(1, ingredient.id)"
       :disabled="isLimitMax"
     >
       <span class="visually-hidden">Больше</span>
@@ -27,43 +28,39 @@
 </template>
 
 <script>
-const COUNTER_LIMIT_MAX = 3;
-const COUNTER_LIMIT_MIN = 0;
+import { COUNTER_LIMIT_MIN, COUNTER_LIMIT_MAX } from "@/common/const";
 export default {
-  name: "ItemCounter.vue",
-  data() {
-    return {
-      counter: COUNTER_LIMIT_MIN,
-    };
+  name: "ItemCounter",
+  props: {
+    ingredient: {
+      type: Object,
+      required: true,
+    },
   },
   computed: {
     isLimitMin() {
-      return this.counter <= COUNTER_LIMIT_MIN;
+      return this.ingredient.count <= COUNTER_LIMIT_MIN;
     },
     isLimitMax() {
-      return this.counter >= COUNTER_LIMIT_MAX;
+      return this.ingredient.count >= COUNTER_LIMIT_MAX;
     },
   },
   methods: {
-    changeValue(value) {
-      if (value === COUNTER_LIMIT_MAX || value === COUNTER_LIMIT_MIN) {
-        return;
-      }
-      this.counter += value;
-      console.log(this.counter);
-      this.$emit("changeValue", this.counter);
-    },
     validateValue(value) {
       const number = parseInt(value);
       if (Number.isNaN(number)) {
-        this.counter = COUNTER_LIMIT_MIN;
+        this.ingredient.count = COUNTER_LIMIT_MIN;
       }
       if (number <= COUNTER_LIMIT_MIN) {
-        this.counter = COUNTER_LIMIT_MIN;
+        this.ingredient.count = COUNTER_LIMIT_MIN;
       }
       if (number >= COUNTER_LIMIT_MAX) {
-        this.counter = COUNTER_LIMIT_MAX;
+        this.ingredient.count = COUNTER_LIMIT_MAX;
       }
+    },
+    changeValue(value, id) {
+      console.log(value, id);
+      this.$emit("changeValue", [value, id]);
     },
   },
 };

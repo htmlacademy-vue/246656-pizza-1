@@ -40,9 +40,7 @@ export default {
   },
   methods: {
     updateDough(value, price) {
-      console.log(price, "11");
-      this.$emit("changeDough", value);
-      this.$emit("changeDoughPrice", price);
+      this.$emit("changeDough", value, price);
     },
   },
 };

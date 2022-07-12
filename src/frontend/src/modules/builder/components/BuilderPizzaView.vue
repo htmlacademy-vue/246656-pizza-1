@@ -1,12 +1,12 @@
 <template>
-  <AppDrop @drop="$emit('drop', $event)">
+  <AppDrop @drop="moveIngredient">
     <div class="pizza" :class="mainClass">
       <div class="pizza__wrapper">
         <div
-          v-for="{ name, count } in ingredients"
-          :key="name"
+          v-for="ingridient in ingredients"
+          :key="ingridient.id"
           class="pizza__filling"
-          :class="ingredientsClass(count, name)"
+          :class="ingredientsClass(ingridient)"
         />
       </div>
     </div>
@@ -57,12 +57,16 @@ export default {
     },
   },
   methods: {
-    ingredientsClass(count, name) {
+    ingredientsClass(ingridient) {
       return [
-        { [`pizza__filling--${name}`]: count > 0 },
-        { "pizza__filling--second": count === 2 },
-        { "pizza__filling--third": count === 3 },
+        { [`pizza__filling--${ingridient.modifier}`]: ingridient.count > 0 },
+        { "pizza__filling--second": ingridient.count === 2 },
+        { "pizza__filling--third": ingridient.count === 3 },
       ];
+    },
+    moveIngredient(active) {
+      console.log(active.id);
+      this.$emit("changeValue", [1, active.id]);
     },
   },
 };

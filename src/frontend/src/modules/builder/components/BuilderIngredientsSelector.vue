@@ -14,10 +14,9 @@
           :key="sauce.id"
           :title="sauce.name"
           name="sauce"
-          :value="`${sauce.name === 'Томатный' ? 'tomato' : 'creamy'}`"
+          :value="valueComp(sauce.name)"
           :checked="sauce.id === 1"
-          @updateRadioValue="$emit('changeSaucePrice', sauce.price)"
-          @updateRadioName="$emit('changeSauceName', sauce.name)"
+          @updateRadio="$emit('changeSauce', sauce.price, sauce.name)"
         />
       </div>
 
@@ -30,22 +29,14 @@
             v-for="ingredient in ingredients"
             :key="ingredient.id"
           >
-            <AppDrag
-              :transfer-data="{
-                name: ingredient.modifier,
-                count: 1,
-                price: ingredient.price,
-              }"
-            >
-              <span class="filling" :class="`filling--${ingredient.modifier}`">
-                {{ ingredient.name }}
-              </span>
-            </AppDrag>
-
+            <SelectorItem
+              :ingredient="ingredient"
+              class="filling"
+              :class="`filling--${ingredient.modifier}`"
+            />
             <ItemCounter
-              @changeValue="
-                updateIngredients($event, ingredient.modifier, ingredient.price)
-              "
+              :ingredient="ingredient"
+              @changeValue="$emit('changeValue', $event)"
             />
           </li>
         </ul>
@@ -58,10 +49,10 @@
 import TitleSection from "@/common/components/TitleSection";
 import RadioButton from "@/common/components/RadioButton";
 import ItemCounter from "@/common/components/ItemCounter";
-import AppDrag from "@/common/components/AppDrag";
+import SelectorItem from "@/common/components/SelectorItem";
 export default {
   name: "BuilderDoughSelector.vue",
-  components: { RadioButton, TitleSection, ItemCounter, AppDrag },
+  components: { SelectorItem, RadioButton, TitleSection, ItemCounter },
   props: {
     ingredients: {
       type: Array,
@@ -73,17 +64,8 @@ export default {
     },
   },
   methods: {
-    updateIngredients(count, name, price) {
-      let numberActionIngrid = this._props.ingredients.indexOf(
-        this._props.ingredients.find((data) => data.modifier === name)
-      );
-      this._props.ingredients[numberActionIngrid].count = count;
-      const ingredient = {
-        name,
-        count,
-        price,
-      };
-      this.$emit("selectIngredients", ingredient);
+    valueComp(name) {
+      return name === "Томатный" ? "tomato" : "creamy";
     },
   },
 };

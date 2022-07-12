@@ -4,11 +4,7 @@
       <div class="content__wrapper">
         <TitleSection size="big"> Конструктор пиццы </TitleSection>
         <div class="content__dough">
-          <BuilderDoughSelector
-            :dough="dough"
-            @changeDough="selectDough"
-            @changeDoughPrice="selectDoughPrice"
-          />
+          <BuilderDoughSelector :dough="dough" @changeDough="selectDough" />
         </div>
 
         <div class="content__diameter">
@@ -21,11 +17,10 @@
 
         <div class="content__ingredients">
           <BuilderIngredientsSelector
-            :ingredients="ingredients"
+            :ingredients="ingridientsReact"
             :sauces="sauces"
-            @changeSaucePrice="selectSaucePrice"
-            @changeSauceName="selectSauceName"
-            @selectIngredients="selectIngredients"
+            @changeSauce="selectSauce"
+            @changeValue="selectIngredients"
           />
         </div>
 
@@ -43,8 +38,8 @@
             <BuilderPizzaView
               :dough="selectedDough"
               :sauce="selectedSauce"
-              :ingredients="selectedIngredients"
-              @drop="selectIngredients($event)"
+              :ingredients="checkedIngredients"
+              @changeValue="selectIngredients"
             />
           </div>
 
@@ -97,7 +92,8 @@ export default {
 
   data() {
     return {
-      selectedIngredients: [],
+      ingridientsReact: this.ingredients,
+      selectedIngredients: this.checkedIngredients,
       ingredientsPrice: 0,
       selectedDough: this.dough[0].modifier,
       selectedSauce: this.sauces[0].name,
@@ -114,43 +110,33 @@ export default {
     selectSizeMultiplier(multiplier) {
       this.sizeMultiplier = multiplier;
     },
-    selectDough(doughName) {
+    selectDough(doughName, doughPrice) {
       this.selectedDough = doughName;
-    },
-    selectDoughPrice(doughPrice) {
       this.doughPrice = doughPrice;
     },
-    selectSaucePrice(saucePrice) {
+    selectSauce(saucePrice, sauceName) {
       this.saucePrice = saucePrice;
-    },
-    selectSauceName(sauceName) {
       this.selectedSauce = sauceName;
     },
-    updateIngredientsPrice(ingredirents) {
-      this.ingredientsPrice = ingredirents
-        .filter(({ count }) => count > 0)
-        .reduce(
-          (accumulator, { count, price }) => accumulator + price * count,
-          0
-        );
-    },
-    selectIngredients(ingredirent) {
-      console.log(ingredirent);
-      const existingIngredientIndex = this.selectedIngredients.findIndex(
-        ({ name }) => name === ingredirent.name
+    selectIngredients(arr) {
+      const i = this.ingredients.findIndex(
+        (ingredient) => ingredient.id === arr[1]
       );
-      console.log(existingIngredientIndex);
-      if (existingIngredientIndex !== -1) {
-        this.selectedIngredients.splice(existingIngredientIndex, 1);
+      if (~i) {
+        this.ingredients[i].count += arr[0];
       }
-      this.selectedIngredients.push(ingredirent);
-      this.updateIngredientsPrice(this.selectedIngredients);
     },
   },
   computed: {
+    checkedIngredients() {
+      return this.ingredients.filter((it) => it.count);
+    },
     finalPrice() {
+      const ingredientsPrice = this.checkedIngredients
+        .map((it) => it.price * it.count)
+        .reduce((acc, it) => acc + it, 0);
       return (
-        (this.doughPrice + this.saucePrice + this.ingredientsPrice) *
+        (this.doughPrice + this.saucePrice + ingredientsPrice) *
         this.sizeMultiplier
       );
     },

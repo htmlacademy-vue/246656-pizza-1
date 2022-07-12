@@ -34,8 +34,7 @@ export default {
   },
   methods: {
     updateRadio(value, name) {
-      this.$emit("updateRadioValue", value);
-      this.$emit("updateRadioName", name);
+      this.$emit("updateRadio", value, name);
     },
   },
 };
