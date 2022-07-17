@@ -4,7 +4,11 @@
       <div class="content__wrapper">
         <TitleSection size="big"> Конструктор пиццы </TitleSection>
         <div class="content__dough">
-          <BuilderDoughSelector :dough="dough" @changeDough="selectDough" />
+          <BuilderDoughSelector
+            :dough="dough"
+            :active-dough="baseActiveDough"
+            @changeDough="selectDough"
+          />
         </div>
 
         <div class="content__diameter">
@@ -20,7 +24,7 @@
             :ingredients="ingridientsReact"
             :sauces="sauces"
             @changeSauce="selectSauce"
-            @changeValue="selectIngredients"
+            @changeIngredientCount="selectIngredients"
           />
         </div>
 
@@ -39,7 +43,7 @@
               :dough="selectedDough"
               :sauce="selectedSauce"
               :ingredients="checkedIngredients"
-              @changeValue="selectIngredients"
+              @changeIngredientCount="selectIngredients"
             />
           </div>
 
@@ -92,6 +96,7 @@ export default {
 
   data() {
     return {
+      baseActiveDough: 1,
       ingridientsReact: this.ingredients,
       selectedIngredients: this.checkedIngredients,
       ingredientsPrice: 0,

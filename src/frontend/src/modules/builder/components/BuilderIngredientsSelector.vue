@@ -36,7 +36,11 @@
             />
             <ItemCounter
               :ingredient="ingredient"
-              @changeValue="$emit('changeValue', $event)"
+              :count="ingredient.count"
+              :index-number="ingredient.id"
+              :limit-min="ingredientLimitMin"
+              :limit-max="ingredientLimitMax"
+              @changeValue="$emit('changeIngredientCount', $event)"
             />
           </li>
         </ul>
@@ -50,6 +54,7 @@ import TitleSection from "@/common/components/TitleSection";
 import RadioButton from "@/common/components/RadioButton";
 import ItemCounter from "@/common/components/ItemCounter";
 import SelectorItem from "@/common/components/SelectorItem";
+import { COUNTER_LIMIT_MIN, COUNTER_LIMIT_MAX } from "@/common/const";
 export default {
   name: "BuilderDoughSelector.vue",
   components: { SelectorItem, RadioButton, TitleSection, ItemCounter },
@@ -66,6 +71,14 @@ export default {
   methods: {
     valueComp(name) {
       return name === "Томатный" ? "tomato" : "creamy";
+    },
+  },
+  computed: {
+    ingredientLimitMin() {
+      return COUNTER_LIMIT_MIN;
+    },
+    ingredientLimitMax() {
+      return COUNTER_LIMIT_MAX;
     },
   },
 };

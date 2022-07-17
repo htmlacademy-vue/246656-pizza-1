@@ -3,7 +3,7 @@
     <button
       type="button"
       class="counter__button counter__button--minus"
-      @click="changeValue(-1, ingredient.id)"
+      @click="changeValue(-1, indexNumber)"
       :disabled="isLimitMin"
     >
       <span class="visually-hidden">Меньше</span>
@@ -12,14 +12,14 @@
       type="text"
       name="counter"
       class="counter__input"
-      :value="ingredient.count"
+      :value="count"
       @blur="validateValue($event.target.value)"
       disabled
     />
     <button
       type="button"
       class="counter__button counter__button--plus"
-      @click="changeValue(1, ingredient.id)"
+      @click="changeValue(1, indexNumber)"
       :disabled="isLimitMax"
     >
       <span class="visually-hidden">Больше</span>
@@ -28,36 +28,35 @@
 </template>
 
 <script>
-import { COUNTER_LIMIT_MIN, COUNTER_LIMIT_MAX } from "@/common/const";
 export default {
   name: "ItemCounter",
   props: {
-    ingredient: {
-      type: Object,
+    count: {
+      type: Number,
       required: true,
+    },
+    indexNumber: {
+      type: Number,
+      required: true,
+    },
+    limitMax: {
+      type: Number,
+      required: false,
+    },
+    limitMin: {
+      type: Number,
+      required: false,
     },
   },
   computed: {
     isLimitMin() {
-      return this.ingredient.count <= COUNTER_LIMIT_MIN;
+      return this.count <= this.limitMin;
     },
     isLimitMax() {
-      return this.ingredient.count >= COUNTER_LIMIT_MAX;
+      return this.count >= this.limitMax;
     },
   },
   methods: {
-    validateValue(value) {
-      const number = parseInt(value);
-      if (Number.isNaN(number)) {
-        this.ingredient.count = COUNTER_LIMIT_MIN;
-      }
-      if (number <= COUNTER_LIMIT_MIN) {
-        this.ingredient.count = COUNTER_LIMIT_MIN;
-      }
-      if (number >= COUNTER_LIMIT_MAX) {
-        this.ingredient.count = COUNTER_LIMIT_MAX;
-      }
-    },
     changeValue(value, id) {
       console.log(value, id);
       this.$emit("changeValue", [value, id]);

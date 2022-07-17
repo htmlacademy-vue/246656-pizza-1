@@ -15,7 +15,7 @@
           name="dough"
           :value="name"
           class="visually-hidden"
-          :checked="id === 1"
+          :checked="id === activeDough"
           @change="updateDough(modifier, price)"
         />
         <b>{{ name }}</b>
@@ -35,6 +35,10 @@ export default {
   props: {
     dough: {
       type: Array,
+      required: true,
+    },
+    activeDough: {
+      type: Number,
       required: true,
     },
   },
