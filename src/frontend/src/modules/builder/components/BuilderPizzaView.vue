@@ -66,7 +66,7 @@ export default {
     },
     moveIngredient(active) {
       console.log(active.id);
-      this.$emit("changeValue", [1, active.id]);
+      this.$emit("changeIngredientCount", [1, active.id]);
     },
   },
 };
