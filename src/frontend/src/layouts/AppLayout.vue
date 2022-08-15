@@ -1,22 +1,20 @@
 <template>
   <div>
-    <AppHeader />
-    <Index
-      :sauces="sauces"
-      :ingredients="ingredients"
-      :sizes="sizes"
+    <component
+      :is="layout"
       :dough="dough"
-    />
+      :ingredients="ingredients"
+      :sauces="sauces"
+      :sizes="sizes"
+    >
+      <slot />
+    </component>
   </div>
 </template>
 
 <script>
-import AppHeader from "@/layouts/AppHeader";
-import Index from "@/views/Index";
-
 export default {
   name: "AppLayout",
-  components: { AppHeader, Index },
   props: {
     ingredients: {
       type: Array,
@@ -33,6 +31,15 @@ export default {
     sizes: {
       type: Array,
       required: true,
+    },
+  },
+  computed: {
+    layout() {
+      if (this.$route.meta.layout !== "clean") {
+        return () => import("@/layouts/AppLayoutBase");
+      } else {
+        return () => import("@/layouts/AppLayoutClean");
+      }
     },
   },
 };

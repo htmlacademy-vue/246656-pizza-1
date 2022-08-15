@@ -5,7 +5,14 @@
       :ingredients="ingredients"
       :sizes="sizes"
       :dough="dough"
-    />
+    >
+      <router-view
+        :sauces="sauces"
+        :ingredients="ingredients"
+        :sizes="sizes"
+        :dough="dough"
+      />
+    </AppLayout>
   </div>
 </template>
 
